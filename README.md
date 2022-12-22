@@ -1,0 +1,2 @@
+# JournalEntry
+Mini JournalEntry
