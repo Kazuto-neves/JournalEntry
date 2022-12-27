@@ -26,6 +26,13 @@ namespace JournalEntry.PropertyTests
         }
 
         private int Add(int x1, int x2) => x1 + x2;
-        
+
+        [Property(Arbitrary = new[] { typeof(Types) })]
+        public Property contaDataTest(DateTime x)
+        {
+            return (x.Month - x.Month == dt(x, x)).ToProperty().Collect(x);
+        }
+
+        private int dt(DateTime x1, DateTime x2) => x1.Month - x2.Month;
     }
 }
