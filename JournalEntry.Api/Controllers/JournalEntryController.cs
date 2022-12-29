@@ -12,6 +12,7 @@ namespace JournalEntry.Api.Controllers
         private readonly IJournalEntriesRepository repository;
 
         private readonly ILogger<JournalEntryController> logger;
+
         public JournalEntryController(IJournalEntriesRepository repository, ILogger<JournalEntryController> logger)
         {
             this.repository = repository;
