@@ -3,7 +3,7 @@ using JournalEntry.Domain.Enuns;
 
 namespace JournalEntry.UnitTests.Services
 {
-    public class Genereitor
+    public class Generator
     {
         internal int RandomNumber(int range)
         {
