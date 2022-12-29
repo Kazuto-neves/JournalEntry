@@ -15,7 +15,6 @@ namespace JournalEntry.Api.Controllers
         public JournalEntryController(IJournalEntriesRepository repository, ILogger<JournalEntryController> logger)
         {
             this.repository = repository;
-
             this.logger = logger;
         }
 
