@@ -64,9 +64,9 @@ namespace JournalEntry.UnitTests
         {
             var allItems = new[]
             {
-                new Entry(){Id=Guid.NewGuid(),CreateDate=DateTimeOffset.UtcNow,EffectiveDate=genereitor.RandomDateTime(4),Operation=OperationJournalEntry.DEBIT,Type=TypeOperationJournalEntry.REVENUE,Amount=genereitor.RandomAmount(30)},
-                new Entry(){Id=Guid.NewGuid(),CreateDate=DateTimeOffset.UtcNow,EffectiveDate=genereitor.RandomDateTime(0),Operation=OperationJournalEntry.DEBIT,Type=TypeOperationJournalEntry.REVENUE,Amount=genereitor.RandomAmount(80)},
-                new Entry(){Id=Guid.NewGuid(),CreateDate=DateTimeOffset.UtcNow,EffectiveDate=genereitor.RandomDateTime(7),Operation=OperationJournalEntry.DEBIT,Type=TypeOperationJournalEntry.REVENUE,Amount=genereitor.RandomAmount(50)}
+                new Entry(){Id=Guid.NewGuid(),CreateDate=DateTimeOffset.UtcNow,EffectiveDate=genereitor.RandomDateTime(4),Operation=OperationJournalEntry.Debit,Type=TypeOperationJournalEntry.Revenue,Amount=genereitor.RandomAmount(30)},
+                new Entry(){Id=Guid.NewGuid(),CreateDate=DateTimeOffset.UtcNow,EffectiveDate=genereitor.RandomDateTime(0),Operation=OperationJournalEntry.Debit,Type=TypeOperationJournalEntry.Revenue,Amount=genereitor.RandomAmount(80)},
+                new Entry(){Id=Guid.NewGuid(),CreateDate=DateTimeOffset.UtcNow,EffectiveDate=genereitor.RandomDateTime(7),Operation=OperationJournalEntry.Debit,Type=TypeOperationJournalEntry.Revenue,Amount=genereitor.RandomAmount(50)}
             };
 
             repositoryStub.Setup(repo => repo.GetJournalEntriesAsync()).ReturnsAsync(allItems);
@@ -86,8 +86,8 @@ namespace JournalEntry.UnitTests
                 DateTime.UtcNow,
                 DateTimeOffset.UtcNow,
                 genereitor.RandomAmount(1000),
-                OperationJournalEntry.CREDIT,
-                TypeOperationJournalEntry.ASSETS
+                OperationJournalEntry.Credit,
+                TypeOperationJournalEntry.Assets
                 );
 
             var controller = new JournalEntryController(repositoryStub.Object, loggerStub.Object);
@@ -110,8 +110,8 @@ namespace JournalEntry.UnitTests
                     DateTime.UtcNow,
                     DateTimeOffset.UtcNow,
                     existingItem.Amount += 2,
-                    OperationJournalEntry.CREDIT,
-                    TypeOperationJournalEntry.ASSETS
+                    OperationJournalEntry.Credit,
+                    TypeOperationJournalEntry.Assets
                 );
 
             var controller = new JournalEntryController(repositoryStub.Object, loggerStub.Object);

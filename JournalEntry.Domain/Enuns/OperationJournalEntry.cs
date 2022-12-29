@@ -9,7 +9,7 @@ namespace JournalEntry.Domain.Enuns
     [Flags]
     public enum OperationJournalEntry
     {
-        CREDIT = 1,
-        DEBIT = 2
+        Credit = 1,
+        Debit = 2
     }
 }
