@@ -1,22 +1,51 @@
-﻿using Azure;
-using FluentValidation;
-using JournalEntry.Domain.Entities;
-using JournalEntry.Domain.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using JournalEntry.Domain.Entities;
 
 namespace JournalEntry.Domain.Dtos
 {
-    public class EntriesDto
+    public record EntriesDto(List<EntryDto> entries)
     {
-        List<EntryDto> entriesDto = new List<EntryDto>();
-
         public bool Validate()
         {
-            bool valido = true;
+            bool valido = false;
+            foreach (var item in entries)
+            {
+                valido=item.Validate();
+            }
+            return valido;
+        }
+
+        public List<Entry> MapToEntry()
+        {
+            List<Entry> journalEntries = new List<Entry>();
+            foreach (var item in entries)
+            {
+                journalEntries.Add(item.CreateJournalEntry());
+            }
+            return journalEntries;
+        }
+    }
+    /*public class EntriesDto
+    {
+        List<EntryDto> entriesDto = new List<EntryDto>();
+        List<Entry> entries = new List<Entry>();
+        EntryDto entryDto = new EntryDto();
+
+        public void Add(Guid Id, DateTime EffectiveDate, DateTimeOffset CreateDate, decimal Amount, OperationJournalEntry Operation, TypeOperationJournalEntry Type)
+        {
+            entries.Add(new Entry()
+            {
+                Id = Id,
+                CreateDate = CreateDate,
+                EffectiveDate = EffectiveDate,
+                Amount = Amount,
+                Operation = Operation,
+                Type = Type
+            });
+        }
+        public bool Validate()
+        {
+            
+            bool valido = false;
             foreach (var item in entriesDto)
             {
                 if (valido) valido = item.Validate() ? true : false;
@@ -25,12 +54,11 @@ namespace JournalEntry.Domain.Dtos
         }
         public List<Entry> MapToEntry(Guid? id = null)
         {
-            List<Entry> entries = new List<Entry>();
             foreach (var item in entriesDto)
             {
                 entries.Add(item.MapToEntry());
             }
             return entries;
         }
-    }
+    }*/
 }

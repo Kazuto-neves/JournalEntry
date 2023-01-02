@@ -16,7 +16,7 @@ namespace JournalEntry.UnitTests
     {
         private readonly Mock<IJournalEntriesRepository> repositoryStub = new Mock<IJournalEntriesRepository>();
         private readonly Mock<ILogger<JournalEntryController>> loggerStub = new();
-        private Genereitor genereitor = new Genereitor();
+        private Generator generator = new Generator();
 
         [Fact]
         public async Task GetJournalEntryAsync_WithUnexistingJournalEntry_ReturnsNotFound()
@@ -31,7 +31,7 @@ namespace JournalEntry.UnitTests
         [Fact]
         public async Task GetJournalEntryAsync_WithUnexistingJournalEntry_ReturnsExpextedJournalEntry()
         {
-            var itemResult = genereitor.CreateRandomJournalEntry(1000, 4);
+            var itemResult = generator.CreateRandomJournalEntry(1000, 4);
             var itemDtoExpected = itemResult.AsDto();
             repositoryStub.Setup(repo => repo.GetJournalEntryAsync(It.IsAny<Guid>())).ReturnsAsync(itemResult);
 
@@ -47,7 +47,7 @@ namespace JournalEntry.UnitTests
         [Fact]
         public async Task GetJournalEntriesAsync_WithUnexistingJournalEntries_ReturnsAllJournalEntries()
         {
-            var itemsResults = new[] { genereitor.CreateRandomJournalEntry(1000, 4), genereitor.CreateRandomJournalEntry(1000, 6), genereitor.CreateRandomJournalEntry(1000, 9) };
+            var itemsResults = new[] { generator.CreateRandomJournalEntry(1000, 4), generator.CreateRandomJournalEntry(1000, 6), generator.CreateRandomJournalEntry(1000, 9) };
 
             repositoryStub.Setup(repo => repo.GetJournalEntriesAsync()).ReturnsAsync(itemsResults);
 
@@ -64,9 +64,9 @@ namespace JournalEntry.UnitTests
         {
             var allItems = new[]
             {
-                new Entry(){Id=Guid.NewGuid(),CreateDate=DateTimeOffset.UtcNow,EffectiveDate=genereitor.RandomDateTime(4),Operation=OperationJournalEntry.Debit,Type=TypeOperationJournalEntry.Revenue,Amount=genereitor.RandomAmount(30)},
-                new Entry(){Id=Guid.NewGuid(),CreateDate=DateTimeOffset.UtcNow,EffectiveDate=genereitor.RandomDateTime(0),Operation=OperationJournalEntry.Debit,Type=TypeOperationJournalEntry.Revenue,Amount=genereitor.RandomAmount(80)},
-                new Entry(){Id=Guid.NewGuid(),CreateDate=DateTimeOffset.UtcNow,EffectiveDate=genereitor.RandomDateTime(7),Operation=OperationJournalEntry.Debit,Type=TypeOperationJournalEntry.Revenue,Amount=genereitor.RandomAmount(50)}
+                new Entry(){Id=Guid.NewGuid(),CreateDate=DateTimeOffset.UtcNow,EffectiveDate=generator.RandomDateTime(4),Operation=OperationJournalEntry.Debit,Type=TypeOperationJournalEntry.Revenue,Amount=generator.RandomAmount(30)},
+                new Entry(){Id=Guid.NewGuid(),CreateDate=DateTimeOffset.UtcNow,EffectiveDate=generator.RandomDateTime(0),Operation=OperationJournalEntry.Debit,Type=TypeOperationJournalEntry.Revenue,Amount=generator.RandomAmount(80)},
+                new Entry(){Id=Guid.NewGuid(),CreateDate=DateTimeOffset.UtcNow,EffectiveDate=generator.RandomDateTime(7),Operation=OperationJournalEntry.Debit,Type=TypeOperationJournalEntry.Revenue,Amount=generator.RandomAmount(50)}
             };
 
             repositoryStub.Setup(repo => repo.GetJournalEntriesAsync()).ReturnsAsync(allItems);
@@ -85,7 +85,7 @@ namespace JournalEntry.UnitTests
                 Guid.NewGuid(),
                 DateTime.UtcNow,
                 DateTimeOffset.UtcNow,
-                genereitor.RandomAmount(1000),
+                generator.RandomAmount(1000),
                 OperationJournalEntry.Credit,
                 TypeOperationJournalEntry.Assets
                 );
@@ -100,7 +100,7 @@ namespace JournalEntry.UnitTests
         [Fact]
         public async Task UpadateJournalEntryAsync_WithExistingJournalEntry_ReturnsNoContent()
         {
-            var existingItem = genereitor.CreateRandomJournalEntry(1000, 2);
+            var existingItem = generator.CreateRandomJournalEntry(1000, 2);
             repositoryStub.Setup(repo => repo.GetJournalEntryAsync(It.IsAny<Guid>()))
                 .ReturnsAsync(existingItem);
 
@@ -124,7 +124,7 @@ namespace JournalEntry.UnitTests
         [Fact]
         public async Task DeleteJournalEntryAsync_WithExistingJournalEntry_ReturnsNoContent()
         {
-            var existingItem = genereitor.CreateRandomJournalEntry(1000, 4);
+            var existingItem = generator.CreateRandomJournalEntry(1000, 4);
             repositoryStub.Setup(repo => repo.GetJournalEntryAsync(It.IsAny<Guid>()))
                 .ReturnsAsync(existingItem);
 

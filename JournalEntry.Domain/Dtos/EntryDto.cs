@@ -1,31 +1,67 @@
 ﻿using JournalEntry.Domain.Entities;
 using JournalEntry.Domain.Enuns;
 using JournalEntry.Domain.Services;
+using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 
 namespace JournalEntry.Domain.Dtos
 {
-    public record EntryDto(Guid Id, DateTime EffectiveDate, DateTimeOffset CreateDate, decimal Amount, OperationJournalEntry Operation, TypeOperationJournalEntry Type)
+    public record class EntryDto
     {
+        public Guid Id { get; set; }
+
+        public DateTime EffectiveDate { get; set; }
+
+        public DateTimeOffset CreateDate { get; set; }
+
+        public decimal Amount { get; set; }
+
+        public OperationJournalEntry Operation { get; set; }
+
+        public TypeOperationJournalEntry Type { get; set; }
+
+        public EntryDto(Guid id,DateTime effectiveDate, DateTimeOffset createDate, decimal amount, OperationJournalEntry operation, TypeOperationJournalEntry type)
+        {
+            Id = new Guid();
+            EffectiveDate = effectiveDate;
+            CreateDate = createDate;
+            Amount = amount;
+            Operation = operation;
+            Type = type;
+        }
         public bool Validate()
         {
             var validator = new EntryDtoValidator();
+
             var validationResults = validator.Validate(this);
+
             if (!validationResults.IsValid)
                 foreach (var failure in validationResults.Errors) Console.WriteLine("Propety" + failure.PropertyName + "Erro: " + failure.ErrorMessage);
+
             return validationResults.IsValid;
         }
 
-        public Entry MapToEntry(Guid? id = null)
+        public Entry CreateJournalEntry()
         {
             return new Entry()
             {
-                Id = id is null ? Id : (Guid)id,
+                Id = Id,
                 CreateDate = CreateDate,
                 EffectiveDate = EffectiveDate,
                 Amount = Amount,
                 Operation = Operation,
                 Type = Type
             };
+        }
+
+        public Entry UpdateJournalEntry(Entry entry)
+        {
+            Id = entry.Id;
+            EffectiveDate = entry.EffectiveDate;
+            CreateDate = entry.CreateDate;
+            Amount = entry.Amount;
+            Operation = entry.Operation;
+            Type = entry.Type;
+            return entry;
         }
     }
 }

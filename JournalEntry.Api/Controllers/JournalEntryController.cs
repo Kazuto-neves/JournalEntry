@@ -4,6 +4,7 @@ using JournalEntry.Domain.Interfaces;
 using JournalEntry.Domain.Services;
 using JournalEntry.Domain.Utilities;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace JournalEntry.Api.Controllers
 {
@@ -24,14 +25,16 @@ namespace JournalEntry.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateJournalEntryAsync(EntriesDto entriesDto)
         {
+            var entries = await repository.GetJournalEntriesAsync();
+
             if (!entriesDto.Validate()) return BadRequest();
 
+            if (!EntryValidatorAddAmount.ValidatorList(entries, entriesDto.MapToEntry())) return BadRequest();
+
             foreach (var item in entriesDto.MapToEntry())
-            {
                 await repository.CreateJournalEntryAsync(item);
-            }
-            //return CreatedAtAction(nameof(GetJournalEntriesAsync), entriesDto);
-            return Accepted();
+
+            return Created(nameof(GetJournalEntriesAsync), entriesDto);
         }
 
         [HttpGet]
@@ -61,9 +64,11 @@ namespace JournalEntry.Api.Controllers
 
             if (existingJEntry is null) return NotFound();
 
-            if (!entryDto.Validate() && !EntryValidatorAddAmount.Validator(entries, existingJEntry)) return BadRequest();
+            if (!entryDto.Validate()) return BadRequest();
 
-            await repository.UpdateJournalEntryAsync(entryDto.MapToEntry(id));
+            if(!EntryValidatorAddAmount.Validator(entries, entryDto.UpdateJournalEntry(existingJEntry))) return BadRequest();
+
+            await repository.UpdateJournalEntryAsync(entryDto.UpdateJournalEntry(existingJEntry));
 
             return Ok(existingJEntry.AsDto());
         }
