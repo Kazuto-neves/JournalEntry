@@ -10,17 +10,24 @@ namespace JournalEntry.Domain.Services
 {
     public static class EntryValidatorAddAmount
     {
-        public static bool Validator(IEnumerable<Entry> entries, Entry entry)
+        public static bool Validador(IEnumerable<Entry> entries,Object obj)
+        {
+            bool valido = false;
+            valido = (obj.GetType() == typeof(Entry)) ? ValidatorUpdate(entries, (Entry)obj) : ValidatorCreate(entries, (List<Entry>)obj);
+            return valido;
+        }
+
+        internal static bool ValidatorUpdate(IEnumerable<Entry> entries, Entry entry)
         {
             decimal amount = 0;
-            foreach (Entry e in entries)
+            foreach (Entry IEentry in entries)
             {
-                if (e.Id != entry.Id)
+                if (IEentry.Id != entry.Id)
                 {
-                    if (e.Type.Equals(TypeOperationJournalEntry.Dividends) || e.Type.Equals(TypeOperationJournalEntry.Expenses) || e.Type.Equals(TypeOperationJournalEntry.Assets))
-                        amount = e.Operation.Equals(OperationJournalEntry.Debit) ? amount + e.Amount : amount - e.Amount;
+                    if (IEentry.Type.Equals(TypeOperationJournalEntry.Dividends) || IEentry.Type.Equals(TypeOperationJournalEntry.Expenses) || IEentry.Type.Equals(TypeOperationJournalEntry.Assets))
+                        amount = IEentry.Operation.Equals(OperationJournalEntry.Debit) ? amount + IEentry.Amount : amount - IEentry.Amount;
                     else
-                        amount = e.Operation.Equals(OperationJournalEntry.Debit) ? amount - e.Amount : amount + e.Amount;
+                        amount = IEentry.Operation.Equals(OperationJournalEntry.Debit) ? amount - IEentry.Amount : amount + IEentry.Amount;
                 }
             }
 
@@ -32,26 +39,26 @@ namespace JournalEntry.Domain.Services
             return (amount == 0 ? true : false);
         }
 
-        public static bool ValidatorList(IEnumerable<Entry> entries, List<Entry> entry)
+        internal static bool ValidatorCreate(IEnumerable<Entry> entries, List<Entry> journalEntries)
         {
             decimal amount = 0;
-            foreach (var e in entry)
+            foreach (var journalEntry in journalEntries)
             {
-                foreach (Entry e2 in entries)
+                foreach (Entry IEentry in entries)
                 {
-                    if (e2.Id != e2.Id)
+                    if (IEentry.Id != journalEntry.Id)
                     {
-                        if (e2.Type.Equals(TypeOperationJournalEntry.Dividends) || e2.Type.Equals(TypeOperationJournalEntry.Expenses) || e2.Type.Equals(TypeOperationJournalEntry.Assets))
-                            amount = e2.Operation.Equals(OperationJournalEntry.Debit) ? amount + e2.Amount : amount - e2.Amount;
+                        if (IEentry.Type.Equals(TypeOperationJournalEntry.Dividends) || IEentry.Type.Equals(TypeOperationJournalEntry.Expenses) || IEentry.Type.Equals(TypeOperationJournalEntry.Assets))
+                            amount = journalEntry.Operation.Equals(OperationJournalEntry.Debit) ? amount + IEentry.Amount : amount - IEentry.Amount;
                         else
-                            amount = e2.Operation.Equals(OperationJournalEntry.Debit) ? amount - e2.Amount : amount + e2.Amount;
+                            amount = IEentry.Operation.Equals(OperationJournalEntry.Debit) ? amount - IEentry.Amount : amount + IEentry.Amount;
                     }
                 }
 
-                if (e.Type.Equals(TypeOperationJournalEntry.Dividends) || e.Type.Equals(TypeOperationJournalEntry.Expenses) || e.Type.Equals(TypeOperationJournalEntry.Assets))
-                    amount = e.Operation.Equals(OperationJournalEntry.Debit) ? amount + e.Amount : amount - e.Amount;
+                if (journalEntry.Type.Equals(TypeOperationJournalEntry.Dividends) || journalEntry.Type.Equals(TypeOperationJournalEntry.Expenses) || journalEntry.Type.Equals(TypeOperationJournalEntry.Assets))
+                    amount = journalEntry.Operation.Equals(OperationJournalEntry.Debit) ? amount + journalEntry.Amount : amount - journalEntry.Amount;
                 else
-                    amount = e.Operation.Equals(OperationJournalEntry.Debit) ? amount - e.Amount : amount + e.Amount;
+                    amount = journalEntry.Operation.Equals(OperationJournalEntry.Debit) ? amount - journalEntry.Amount : amount + journalEntry.Amount;
             }
 
             return (amount == 0 ? true : false);

@@ -21,7 +21,7 @@ namespace JournalEntry.Domain.Dtos
 
         public EntryDto(Guid id,DateTime effectiveDate, DateTimeOffset createDate, decimal amount, OperationJournalEntry operation, TypeOperationJournalEntry type)
         {
-            Id = new Guid();
+            Id = id;
             EffectiveDate = effectiveDate;
             CreateDate = createDate;
             Amount = amount;
@@ -44,8 +44,8 @@ namespace JournalEntry.Domain.Dtos
         {
             return new Entry()
             {
-                Id = Id,
-                CreateDate = CreateDate,
+                Id = Guid.NewGuid(),
+                CreateDate = DateTimeOffset.UtcNow,
                 EffectiveDate = EffectiveDate,
                 Amount = Amount,
                 Operation = Operation,

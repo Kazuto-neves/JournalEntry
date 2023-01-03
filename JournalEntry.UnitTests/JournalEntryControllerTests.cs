@@ -64,9 +64,9 @@ namespace JournalEntry.UnitTests
         {
             var allItems = new[]
             {
-                new Entry(){Id=Guid.NewGuid(),CreateDate=DateTimeOffset.UtcNow,EffectiveDate=generator.RandomDateTime(4),Operation=OperationJournalEntry.Debit,Type=TypeOperationJournalEntry.Revenue,Amount=generator.RandomAmount(30)},
-                new Entry(){Id=Guid.NewGuid(),CreateDate=DateTimeOffset.UtcNow,EffectiveDate=generator.RandomDateTime(0),Operation=OperationJournalEntry.Debit,Type=TypeOperationJournalEntry.Revenue,Amount=generator.RandomAmount(80)},
-                new Entry(){Id=Guid.NewGuid(),CreateDate=DateTimeOffset.UtcNow,EffectiveDate=generator.RandomDateTime(7),Operation=OperationJournalEntry.Debit,Type=TypeOperationJournalEntry.Revenue,Amount=generator.RandomAmount(50)}
+                new Entry(){Id=Guid.NewGuid(),CreateDate=DateTimeOffset.UtcNow,EffectiveDate=generator.RandomDateTime(4),Operation=generator.RandomOperation(2),Type=generator.RandomType(5),Amount=generator.RandomAmount(30)},
+                new Entry(){Id=Guid.NewGuid(),CreateDate=DateTimeOffset.UtcNow,EffectiveDate=generator.RandomDateTime(0),Operation=generator.RandomOperation(2),Type=generator.RandomType(5),Amount=generator.RandomAmount(80)},
+                new Entry(){Id=Guid.NewGuid(),CreateDate=DateTimeOffset.UtcNow,EffectiveDate=generator.RandomDateTime(7),Operation=generator.RandomOperation(2),Type=generator.RandomType(5),Amount=generator.RandomAmount(50)}
             };
 
             repositoryStub.Setup(repo => repo.GetJournalEntriesAsync()).ReturnsAsync(allItems);
@@ -81,44 +81,51 @@ namespace JournalEntry.UnitTests
         [Fact]
         public async Task CreateJournalEntriesAsync_WithItemToCreate_ReturnsCreatedJournalEntry()
         {
-            var itemToCreate = new EntryDto(
-                Guid.NewGuid(),
-                DateTime.UtcNow,
-                DateTimeOffset.UtcNow,
-                generator.RandomAmount(1000),
-                OperationJournalEntry.Credit,
-                TypeOperationJournalEntry.Assets
+            var itemsToCreate = new EntriesDto(
+                new List<EntryDto>(
+                    new EntryDto[] {
+                        generator.CreateTestEntryDtoJournalEntry(300, 5, OperationJournalEntry.Debit, TypeOperationJournalEntry.Dividends),
+                        generator.CreateTestEntryDtoJournalEntry(700, 6, OperationJournalEntry.Credit, TypeOperationJournalEntry.Dividends),
+                        generator.CreateTestEntryDtoJournalEntry(700, 5, OperationJournalEntry.Debit, TypeOperationJournalEntry.Dividends),
+                        generator.CreateTestEntryDtoJournalEntry(300, 7, OperationJournalEntry.Credit, TypeOperationJournalEntry.Dividends),
+                    }
+                    )
                 );
 
             var controller = new JournalEntryController(repositoryStub.Object, loggerStub.Object);
 
-            var result = await controller.CreateJournalEntryAsync(itemToCreate);
+            var result = await controller.CreateJournalEntryAsync(itemsToCreate);
 
-            result.Should().BeOfType<AcceptedResult>();
+            result.Should().BeOfType<CreatedResult>();
         }
 
         [Fact]
         public async Task UpadateJournalEntryAsync_WithExistingJournalEntry_ReturnsNoContent()
         {
-            var existingItem = generator.CreateRandomJournalEntry(1000, 2);
-            repositoryStub.Setup(repo => repo.GetJournalEntryAsync(It.IsAny<Guid>()))
-                .ReturnsAsync(existingItem);
+            var existingItem = generator.CreateTestJournalEntry(200, 4, OperationJournalEntry.Credit, TypeOperationJournalEntry.Dividends);
+            var itemsResults = new[] {
+                generator.CreateTestJournalEntry(300, 5, OperationJournalEntry.Debit, TypeOperationJournalEntry.Dividends),
+                generator.CreateTestJournalEntry(700, 6, OperationJournalEntry.Debit, TypeOperationJournalEntry.Dividends),
+                existingItem,
+                generator.CreateTestJournalEntry(700, 6, OperationJournalEntry.Credit, TypeOperationJournalEntry.Dividends),
+            };
+            repositoryStub.Setup(repo => repo.GetJournalEntriesAsync()).ReturnsAsync(itemsResults);
+            repositoryStub.Setup(repo => repo.GetJournalEntryAsync(It.IsAny<Guid>())).ReturnsAsync(existingItem);
 
-            var itemId = existingItem.Id;
             var itemToUpdate = new EntryDto(
-                    itemId,
-                    DateTime.UtcNow,
-                    DateTimeOffset.UtcNow,
-                    existingItem.Amount += 2,
-                    OperationJournalEntry.Credit,
-                    TypeOperationJournalEntry.Assets
+                    existingItem.Id,
+                    generator.RandomDateTime(7),
+                    existingItem.CreateDate,
+                    existingItem.Amount += 100,
+                    existingItem.Operation,
+                    existingItem.Type
                 );
 
             var controller = new JournalEntryController(repositoryStub.Object, loggerStub.Object);
 
-            var result = await controller.UpdateJournalEntryAsync(itemId, itemToUpdate);
+            var result = await controller.UpdateJournalEntryAsync(existingItem.Id, itemToUpdate);
 
-            result.Should().BeOfType<AcceptedResult>();
+            result.Should().BeOfType<OkObjectResult>();
         }
 
         [Fact]

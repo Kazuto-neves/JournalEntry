@@ -29,7 +29,7 @@ namespace JournalEntry.Api.Controllers
 
             if (!entriesDto.Validate()) return BadRequest();
 
-            if (!EntryValidatorAddAmount.ValidatorList(entries, entriesDto.MapToEntry())) return BadRequest();
+            if (!EntryValidatorAddAmount.Validador(entries, entriesDto.MapToEntry())) return BadRequest();
 
             foreach (var item in entriesDto.MapToEntry())
                 await repository.CreateJournalEntryAsync(item);
@@ -66,7 +66,7 @@ namespace JournalEntry.Api.Controllers
 
             if (!entryDto.Validate()) return BadRequest();
 
-            if(!EntryValidatorAddAmount.Validator(entries, entryDto.UpdateJournalEntry(existingJEntry))) return BadRequest();
+            if(!EntryValidatorAddAmount.Validador(entries, entryDto.UpdateJournalEntry(existingJEntry))) return BadRequest();
 
             await repository.UpdateJournalEntryAsync(entryDto.UpdateJournalEntry(existingJEntry));
 
