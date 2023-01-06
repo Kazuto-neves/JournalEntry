@@ -1,10 +1,5 @@
 ﻿using FluentValidation;
 using JournalEntry.Domain.Dtos;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JournalEntry.Domain.Services
 {

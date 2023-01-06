@@ -1,10 +1,8 @@
 ﻿using JournalEntry.Domain.Dtos;
-using JournalEntry.Domain.Entities;
 using JournalEntry.Domain.Interfaces;
 using JournalEntry.Domain.Services;
 using JournalEntry.Domain.Utilities;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 
 namespace JournalEntry.Api.Controllers
 {

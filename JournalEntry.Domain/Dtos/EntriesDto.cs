@@ -7,20 +7,20 @@ namespace JournalEntry.Domain.Dtos
         public bool Validate()
         {
             bool valido = false;
+
             foreach (var item in entries)
-            {
                 valido=item.Validate();
-            }
+
             return valido;
         }
 
         public List<Entry> MapToEntry()
         {
             List<Entry> journalEntries = new List<Entry>();
+
             foreach (var item in entries)
-            {
                 journalEntries.Add(item.CreateJournalEntry());
-            }
+
             return journalEntries;
         }
     }

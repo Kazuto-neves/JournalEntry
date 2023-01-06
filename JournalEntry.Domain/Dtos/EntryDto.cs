@@ -1,7 +1,6 @@
 ﻿using JournalEntry.Domain.Entities;
 using JournalEntry.Domain.Enuns;
 using JournalEntry.Domain.Services;
-using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 
 namespace JournalEntry.Domain.Dtos
 {
@@ -28,6 +27,7 @@ namespace JournalEntry.Domain.Dtos
             Operation = operation;
             Type = type;
         }
+
         public bool Validate()
         {
             var validator = new EntryDtoValidator();

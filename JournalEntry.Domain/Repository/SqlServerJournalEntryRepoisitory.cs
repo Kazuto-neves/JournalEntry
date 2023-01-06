@@ -25,8 +25,6 @@ namespace JournalEntry.Domain.Repository
         public async Task<IEnumerable<Entry>> GetJournalEntriesAsync() => await db.journalEntries.ToListAsync();
 
         public async Task<Entry> GetJournalEntryAsync(Guid id) => await db.journalEntries.FindAsync(id);
-        /*public async Task<IEnumerable<Entry>> GetJournalEntryExceptTheRequiredAsync(Guid id) => (IEnumerable<Entry>)await db.journalEntries
-            .Select(je => je.Id != id).ToListAsync();*/
 
         public async Task UpdateJournalEntryAsync(Entry jEntry)
         {

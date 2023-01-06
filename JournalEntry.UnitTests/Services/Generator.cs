@@ -1,5 +1,4 @@
-﻿using Azure;
-using JournalEntry.Domain.Dtos;
+﻿using JournalEntry.Domain.Dtos;
 using JournalEntry.Domain.Entities;
 using JournalEntry.Domain.Enuns;
 
