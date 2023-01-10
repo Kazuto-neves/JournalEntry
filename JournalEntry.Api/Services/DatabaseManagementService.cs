@@ -5,10 +5,15 @@ namespace JournalEntry.Api.Services
 {
     public static class DatabaseManagementService
     {
+
         public static void MigrationInitialisation(IApplicationBuilder app)
         {
-            using (var serviceScope = app.ApplicationServices.CreateScope())
-                serviceScope.ServiceProvider.GetService<DbContexto>().Database.Migrate();
+            var configServiceScope = app.ApplicationServices.CreateScope().ServiceProvider.GetService<DbContexto>();
+
+            if (configServiceScope is null)
+                throw new Exception(nameof(MigrationInitialisation));
+            
+            configServiceScope.Database.Migrate();
         }
     }
 }

@@ -48,6 +48,7 @@ namespace JournalEntry.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetJournalEntryAsync(Guid id)
         {
+
             var jEntry = await repository.GetJournalEntryAsync(id);
 
             return (jEntry is null ? NotFound() : Ok(jEntry.AsDto()));

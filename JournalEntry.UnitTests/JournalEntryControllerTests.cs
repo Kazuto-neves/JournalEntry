@@ -141,5 +141,69 @@ namespace JournalEntry.UnitTests
 
             result.Should().BeOfType<NoContentResult>();
         }
+
+        [Fact]
+        public async Task CreateJournalEntriesAsync_WithItemToCreate_ReturnsBadRequest()
+        {
+            var itemsToCreate = new EntriesDto(
+                new List<EntryDto>(
+                    new EntryDto[] {
+                        generator.CreateTestEntryDtoJournalEntry(300, 5, OperationJournalEntry.Debit, TypeOperationJournalEntry.Dividends),
+                        generator.CreateTestEntryDtoJournalEntry(800, 6, OperationJournalEntry.Credit, TypeOperationJournalEntry.Dividends),
+                        generator.CreateTestEntryDtoJournalEntry(700, 5, OperationJournalEntry.Debit, TypeOperationJournalEntry.Revenue),
+                        generator.CreateTestEntryDtoJournalEntry(300, 7, OperationJournalEntry.Credit, TypeOperationJournalEntry.Dividends),
+                    }
+                    )
+                );
+
+            var controller = new JournalEntryController(repositoryStub.Object, loggerStub.Object);
+
+            var result = await controller.CreateJournalEntryAsync(itemsToCreate);
+
+            result.Should().BeOfType<BadRequestResult>();
+        }
+
+        [Fact]
+        public async Task UpadateJournalEntryAsync_WithExistingJournalEntry_ReturnsBadRequest()
+        {
+            var existingItem = generator.CreateTestJournalEntry(200, 4, OperationJournalEntry.Credit, TypeOperationJournalEntry.Dividends);
+            var itemsResults = new[] {
+                generator.CreateTestJournalEntry(300, 5, OperationJournalEntry.Debit, TypeOperationJournalEntry.Dividends),
+                generator.CreateTestJournalEntry(700, 6, OperationJournalEntry.Debit, TypeOperationJournalEntry.Dividends),
+                existingItem,
+                generator.CreateTestJournalEntry(700, 6, OperationJournalEntry.Credit, TypeOperationJournalEntry.Dividends),
+            };
+            repositoryStub.Setup(repo => repo.GetJournalEntriesAsync()).ReturnsAsync(itemsResults);
+            repositoryStub.Setup(repo => repo.GetJournalEntryAsync(It.IsAny<Guid>())).ReturnsAsync(existingItem);
+
+            var itemToUpdate = new EntryDto(
+                    existingItem.Id,
+                    generator.RandomDateTime(7),
+                    existingItem.CreateDate,
+                    existingItem.Amount += 100,
+                    existingItem.Operation,
+                    existingItem.Type
+                );
+
+            var controller = new JournalEntryController(repositoryStub.Object, loggerStub.Object);
+
+            var result = await controller.UpdateJournalEntryAsync(Guid.NewGuid(), itemToUpdate);
+
+            result.Should().BeOfType<OkObjectResult>();
+        }
+
+        [Fact]
+        public async Task DeleteJournalEntryAsync_WithExistingJournalEntry_ReturnsNotFound()
+        {
+            var existingItem = generator.CreateRandomJournalEntry(1000, 4);
+            repositoryStub.Setup(repo => repo.GetJournalEntryAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(existingItem);
+
+            var controller = new JournalEntryController(repositoryStub.Object, loggerStub.Object);
+
+            var result = await controller.DeleteJournalEntryAsync(Guid.NewGuid());
+
+            result.Should().BeOfType<NotFoundResult>();
+        }
     }
 }

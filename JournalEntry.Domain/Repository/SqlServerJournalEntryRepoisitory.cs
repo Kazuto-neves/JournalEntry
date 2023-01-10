@@ -1,6 +1,7 @@
 ﻿using JournalEntry.Domain.Entities;
 using JournalEntry.Domain.Interfaces;
 using JournalEntry.Domain.Services;
+using JournalEntry.Domain.Utilities;
 using Microsoft.EntityFrameworkCore;
 
 namespace JournalEntry.Domain.Repository
@@ -17,24 +18,40 @@ namespace JournalEntry.Domain.Repository
 
         public async Task DeleteJournalEntryAsync(Guid id)
         {
-            var filter = await db.journalEntries.FindAsync(id);
-            db.journalEntries.Remove(filter);
+            var _result = await GetJournalEntryAsync(id);
+
+            db.journalEntries.Remove(_result);
             await db.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Entry>> GetJournalEntriesAsync() => await db.journalEntries.ToListAsync();
 
-        public async Task<Entry> GetJournalEntryAsync(Guid id) => await db.journalEntries.FindAsync(id);
+        public async Task<Entry> GetJournalEntryAsync(Guid id)
+        {
+            var _result = await db.journalEntries.FindAsync(id);
+
+            if (_result is null)
+                throw ReturnException.nullException($"Não existe este journal entry ID: {id}");
+
+            await Task.CompletedTask;
+            return _result;
+        }
 
         public async Task UpdateJournalEntryAsync(Entry jEntry)
         {
-            var filter = await db.journalEntries.FirstOrDefaultAsync(existingItem => existingItem.Id == jEntry.Id);
-            filter.EffectiveDate = jEntry.EffectiveDate;
-            filter.Amount = jEntry.Amount;
-            filter.Type = jEntry.Type;
-            filter.Operation = jEntry.Operation;
-            db.journalEntries.Update(filter);
-            await db.SaveChangesAsync();
+            var _result = await db.journalEntries.FirstOrDefaultAsync(existingItem => existingItem.Id == jEntry.Id);
+
+            if (_result is null)
+                throw ReturnException.nullException($"Não existe este journal entry ID: {jEntry.Id}");
+            else
+            {
+                _result.EffectiveDate = jEntry.EffectiveDate;
+                _result.Amount = jEntry.Amount;
+                _result.Type = jEntry.Type;
+                _result.Operation = jEntry.Operation;
+                db.journalEntries.Update(_result);
+                await db.SaveChangesAsync();
+            }
         }
     }
 }
