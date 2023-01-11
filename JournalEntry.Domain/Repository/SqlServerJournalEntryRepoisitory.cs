@@ -8,27 +8,27 @@ namespace JournalEntry.Domain.Repository
 {
     public class SqlServerJournalEntryRepoisitory : IJournalEntriesRepository
     {
-        private DbContexto db;
-        public SqlServerJournalEntryRepoisitory(DbContexto db) => this.db = db;
+        private DbContexto _db;
+        public SqlServerJournalEntryRepoisitory(DbContexto db) => this._db = db;
         public async Task CreateJournalEntryAsync(Entry jEntry)
         {
-            await db.journalEntries.AddAsync(jEntry);
-            await db.SaveChangesAsync();
+            await _db.journalEntries.AddAsync(jEntry);
+            await _db.SaveChangesAsync();
         }
 
         public async Task DeleteJournalEntryAsync(Guid id)
         {
             var _result = await GetJournalEntryAsync(id);
 
-            db.journalEntries.Remove(_result);
-            await db.SaveChangesAsync();
+            _db.journalEntries.Remove(_result);
+            await _db.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Entry>> GetJournalEntriesAsync() => await db.journalEntries.ToListAsync();
+        public async Task<IEnumerable<Entry>> GetJournalEntriesAsync() => await _db.journalEntries.ToListAsync();
 
         public async Task<Entry> GetJournalEntryAsync(Guid id)
         {
-            var _result = await db.journalEntries.FindAsync(id);
+            var _result = await _db.journalEntries.FindAsync(id);
 
             if (_result is null)
                 throw ReturnException.nullException($"Não existe este journal entry ID: {id}");
@@ -39,7 +39,7 @@ namespace JournalEntry.Domain.Repository
 
         public async Task UpdateJournalEntryAsync(Entry jEntry)
         {
-            var _result = await db.journalEntries.FirstOrDefaultAsync(existingItem => existingItem.Id == jEntry.Id);
+            var _result = await _db.journalEntries.FirstOrDefaultAsync(existingItem => existingItem.Id == jEntry.Id);
 
             if (_result is null)
                 throw ReturnException.nullException($"Não existe este journal entry ID: {jEntry.Id}");
@@ -49,8 +49,8 @@ namespace JournalEntry.Domain.Repository
                 _result.Amount = jEntry.Amount;
                 _result.Type = jEntry.Type;
                 _result.Operation = jEntry.Operation;
-                db.journalEntries.Update(_result);
-                await db.SaveChangesAsync();
+                _db.journalEntries.Update(_result);
+                await _db.SaveChangesAsync();
             }
         }
     }

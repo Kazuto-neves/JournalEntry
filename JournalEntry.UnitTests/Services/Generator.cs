@@ -40,7 +40,21 @@ namespace JournalEntry.UnitTests.Services
             };
         }
 
-        public Entry CreateTestJournalEntry(decimal amount, int dateAddEfective, OperationJournalEntry operation, TypeOperationJournalEntry type)
+        public Object CreateTestEntry(int op, decimal amount, int dateAddEfective, OperationJournalEntry operation, TypeOperationJournalEntry type, int? amountError = null)
+        {
+            object Return;
+            if (op == 1)
+            {
+                Return = CreateTestJournalEntry(amount, dateAddEfective, operation, type, amountError);
+            }
+            else
+            {
+                Return = CreateTestEntryDtoJournalEntry(amount, dateAddEfective, operation, type, amountError);
+            }
+            return Return;
+        }
+
+        public Entry CreateTestJournalEntry(decimal amount, int dateAddEfective, OperationJournalEntry operation, TypeOperationJournalEntry type, int? amountError = null)
         {
             OperationJournalEntry operationJournalEntry = operation;
             TypeOperationJournalEntry typeOperationJournal = type;
@@ -48,14 +62,15 @@ namespace JournalEntry.UnitTests.Services
             {
                 Id = Guid.NewGuid(),
                 EffectiveDate = RandomDateTime(dateAddEfective),
-                Amount = amount,
+                Amount = amountError is null ? amount :
+                    amountError == 1 ? amount * -1 : RandomAmount((int)amountError),
                 Operation = operationJournalEntry,
                 Type = typeOperationJournal,
                 CreateDate = DateTimeOffset.UtcNow,
             };
         }
 
-        public EntryDto CreateTestEntryDtoJournalEntry(decimal amount, int dateAddEfective, OperationJournalEntry operation, TypeOperationJournalEntry type)
+        public EntryDto CreateTestEntryDtoJournalEntry(decimal amount, int dateAddEfective, OperationJournalEntry operation, TypeOperationJournalEntry type, int? amountError = null)
         {
             OperationJournalEntry operationJournalEntry = operation;
             TypeOperationJournalEntry typeOperationJournal = type;
@@ -63,10 +78,33 @@ namespace JournalEntry.UnitTests.Services
                 Guid.NewGuid(),
                 RandomDateTime(dateAddEfective),
                 DateTimeOffset.UtcNow,
-                amount,
+                amountError is null ? amount :
+                    amountError == 1 ? amount * -1 : RandomAmount((int)amountError),
                 operationJournalEntry,
                 typeOperationJournal
                 );
+        }
+
+        public Object CreateTestEntryNull(int Op)
+        {
+            object Return;
+            if (Op == 1)
+                Return = CreateTestJournalEntryNull();
+            else
+                Return = CreateTestJournalEntryDtoNull();
+
+            return Return;
+        }
+        public Entry CreateTestJournalEntryNull()
+        {
+            Entry entry = null;
+            return entry;
+        }
+
+        public EntryDto CreateTestJournalEntryDtoNull()
+        {
+            EntryDto entry = null;
+            return entry;
         }
 
     }
