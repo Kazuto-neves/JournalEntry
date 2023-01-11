@@ -16,16 +16,11 @@ namespace JournalEntry.UnitTests.Services
 
         public DateTime RandomDateTime(int dateAddEfective) => DateTime.UtcNow.AddDays(RandomNumber(dateAddEfective));
 
-        public TypeOperationJournalEntry RandomType(int range)
-        {
-            return range == 0 ? TypeOperationJournalEntry.Dividends :
-                range == 1 ? TypeOperationJournalEntry.Expenses :
-                range == 2 ? TypeOperationJournalEntry.Assets :
-                range == 3 ? TypeOperationJournalEntry.Liabilities :
-                range == 4 ? TypeOperationJournalEntry.OwnersEquity : TypeOperationJournalEntry.Revenue;
-        }
+        public TypeOperationJournalEntry RandomType(int range) => (TypeOperationJournalEntry)range;
 
         public OperationJournalEntry RandomOperation(int range) => range == 0 ? OperationJournalEntry.Debit : OperationJournalEntry.Credit;
+
+        internal decimal amountsOfCasesGenerated(decimal amount, int? amountError = null) => amountError is null ? amount : amountError == 1 ? amount * -1 : RandomAmount((int)amountError);
 
         public Entry CreateRandomJournalEntry(int range, int dateAddEfective)
         {
@@ -40,19 +35,9 @@ namespace JournalEntry.UnitTests.Services
             };
         }
 
-        public Object CreateTestEntry(int op, decimal amount, int dateAddEfective, OperationJournalEntry operation, TypeOperationJournalEntry type, int? amountError = null)
-        {
-            object Return;
-            if (op == 1)
-            {
-                Return = CreateTestJournalEntry(amount, dateAddEfective, operation, type, amountError);
-            }
-            else
-            {
-                Return = CreateTestEntryDtoJournalEntry(amount, dateAddEfective, operation, type, amountError);
-            }
-            return Return;
-        }
+        public Object CreateTestEntry(int op, decimal amount, int dateAddEfective, OperationJournalEntry operation, TypeOperationJournalEntry type, int? amountError = null) =>
+            op == 1 ? CreateTestJournalEntry(amount, dateAddEfective, operation, type, amountError) : CreateTestEntryDtoJournalEntry(amount, dateAddEfective, operation, type, amountError);
+
 
         public Entry CreateTestJournalEntry(decimal amount, int dateAddEfective, OperationJournalEntry operation, TypeOperationJournalEntry type, int? amountError = null)
         {
@@ -62,8 +47,7 @@ namespace JournalEntry.UnitTests.Services
             {
                 Id = Guid.NewGuid(),
                 EffectiveDate = RandomDateTime(dateAddEfective),
-                Amount = amountError is null ? amount :
-                    amountError == 1 ? amount * -1 : RandomAmount((int)amountError),
+                Amount = amountsOfCasesGenerated(amount,amountError),
                 Operation = operationJournalEntry,
                 Type = typeOperationJournal,
                 CreateDate = DateTimeOffset.UtcNow,
@@ -78,8 +62,7 @@ namespace JournalEntry.UnitTests.Services
                 Guid.NewGuid(),
                 RandomDateTime(dateAddEfective),
                 DateTimeOffset.UtcNow,
-                amountError is null ? amount :
-                    amountError == 1 ? amount * -1 : RandomAmount((int)amountError),
+                amountsOfCasesGenerated(amount, amountError),
                 operationJournalEntry,
                 typeOperationJournal
                 );
@@ -97,13 +80,13 @@ namespace JournalEntry.UnitTests.Services
         }
         public Entry CreateTestJournalEntryNull()
         {
-            Entry entry = null;
+            Entry? entry = null;
             return entry;
         }
 
         public EntryDto CreateTestJournalEntryDtoNull()
         {
-            EntryDto entry = null;
+            EntryDto? entry = null;
             return entry;
         }
 

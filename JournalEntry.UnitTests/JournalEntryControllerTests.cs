@@ -9,7 +9,6 @@ using JournalEntry.Domain.Enuns;
 using JournalEntry.Domain.Utilities;
 using FluentAssertions;
 using JournalEntry.UnitTests.Services;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
 
 namespace JournalEntry.UnitTests
 {
@@ -17,7 +16,7 @@ namespace JournalEntry.UnitTests
     {
         private readonly Mock<IJournalEntriesRepository> repositoryStub = new Mock<IJournalEntriesRepository>();
         private readonly Mock<ILogger<JournalEntryController>> loggerStub = new();
-        private Generator generator = new Generator();
+        private readonly Generator generator = new Generator();
 
         [Fact]
         public async Task GetJournalEntryAsync_WithUnexistingJournalEntry_ReturnsNotFound()
@@ -155,11 +154,12 @@ namespace JournalEntry.UnitTests
             repositoryStub.Setup(repo => repo.GetJournalEntriesAsync()).ReturnsAsync(itemsResults);
             repositoryStub.Setup(repo => repo.GetJournalEntryAsync(It.IsAny<Guid>())).ReturnsAsync(existingItem);
 
+            decimal amount = existingItem.Amount += 100;
             var itemToUpdate = new EntryDto(
                     existingItem.Id,
                     generator.RandomDateTime(7),
                     existingItem.CreateDate,
-                    existingItem.Amount += 100,
+                    amount,
                     existingItem.Operation,
                     existingItem.Type
                 );
@@ -204,11 +204,12 @@ namespace JournalEntry.UnitTests
             repositoryStub.Setup(repo => repo.GetJournalEntriesAsync()).ReturnsAsync(itemsResults);
             repositoryStub.Setup(repo => repo.GetJournalEntryAsync(It.IsAny<Guid>())).ReturnsAsync(existingItem);
 
+            decimal amount = existingItem.Amount += 100;
             var itemToUpdate = new EntryDto(
                 existingItem.Id,
                 generator.RandomDateTime(7),
                 existingItem.CreateDate,
-                existingItem.Amount += 100,
+                amount,
                 existingItem.Operation,
                 existingItem.Type
                 );
@@ -219,7 +220,7 @@ namespace JournalEntry.UnitTests
 
             result.Should().BeOfType<BadRequestResult>();
         }
-
+        [Fact]
         public async Task UpadateJournalEntryAsync_WithExistingJournalEntry_ReturnsBadRequest_Entry_Validator_AddAmount()
         {
             var existingItem = (Entry)generator.CreateTestEntry(1, 200, 6, OperationJournalEntry.Credit, TypeOperationJournalEntry.Dividends, 2);
@@ -232,11 +233,12 @@ namespace JournalEntry.UnitTests
             repositoryStub.Setup(repo => repo.GetJournalEntriesAsync()).ReturnsAsync(itemsResults);
             repositoryStub.Setup(repo => repo.GetJournalEntryAsync(It.IsAny<Guid>())).ReturnsAsync(existingItem);
 
+            decimal amount = existingItem.Amount += 100;
             var itemToUpdate = new EntryDto(
                 existingItem.Id,
                 generator.RandomDateTime(7),
                 existingItem.CreateDate,
-                existingItem.Amount += 100,
+                amount,
                 existingItem.Operation,
                 existingItem.Type
                 );

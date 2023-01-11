@@ -8,7 +8,7 @@ namespace JournalEntry.Domain.Repository
 {
     public class SqlServerJournalEntryRepoisitory : IJournalEntriesRepository
     {
-        private DbContexto _db;
+        private readonly DbContexto _db;
         public SqlServerJournalEntryRepoisitory(DbContexto db) => this._db = db;
         public async Task CreateJournalEntryAsync(Entry jEntry)
         {
@@ -31,7 +31,7 @@ namespace JournalEntry.Domain.Repository
             var _result = await _db.journalEntries.FindAsync(id);
 
             if (_result is null)
-                throw ReturnException.nullException($"Não existe este journal entry ID: {id}");
+                throw ReturnException.nullReferenceException($"Não existe este journal entry ID: {id}");
 
             await Task.CompletedTask;
             return _result;
@@ -42,7 +42,7 @@ namespace JournalEntry.Domain.Repository
             var _result = await _db.journalEntries.FirstOrDefaultAsync(existingItem => existingItem.Id == jEntry.Id);
 
             if (_result is null)
-                throw ReturnException.nullException($"Não existe este journal entry ID: {jEntry.Id}");
+                throw ReturnException.nullReferenceException($"Não existe este journal entry ID: {jEntry.Id}");
             else
             {
                 _result.EffectiveDate = jEntry.EffectiveDate;

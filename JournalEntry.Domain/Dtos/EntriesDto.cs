@@ -4,15 +4,7 @@ namespace JournalEntry.Domain.Dtos
 {
     public record EntriesDto(List<EntryDto> entries)
     {
-        public bool Validate()
-        {
-            bool valido = false;
-
-            foreach (var item in entries)
-                valido=item.Validate();
-
-            return valido;
-        }
+        public bool Validate() => entries.All(x => x.Validate());
 
         public List<Entry> MapToEntry()
         {

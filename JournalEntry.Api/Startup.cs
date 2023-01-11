@@ -1,13 +1,11 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
 using JournalEntry.Api.Services;
-using JournalEntry.Domain.Dtos;
 using JournalEntry.Domain.Interfaces;
 using JournalEntry.Domain.Repository;
 using JournalEntry.Domain.Services;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 using System.Text.Json.Serialization;
 
 namespace JournalEntry.Api
