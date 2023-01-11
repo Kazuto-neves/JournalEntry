@@ -1,4 +1,5 @@
 ﻿using JournalEntry.Domain.Dtos;
+using JournalEntry.Domain.Entities;
 using JournalEntry.Domain.Interfaces;
 using JournalEntry.Domain.Services;
 using JournalEntry.Domain.Utilities;
@@ -65,9 +66,9 @@ namespace JournalEntry.Api.Controllers
 
             if (!entryDto.Validate()) return BadRequest();
 
-            if(!EntryValidatorAddAmount.Validador(entries, entryDto.UpdateJournalEntry(existingJEntry))) return BadRequest();
+            if(!EntryValidatorAddAmount.Validador(entries, entryDto.journalEntryManipulate(existingJEntry))) return BadRequest();
 
-            await repository.UpdateJournalEntryAsync(entryDto.UpdateJournalEntry(existingJEntry));
+            await repository.UpdateJournalEntryAsync(entryDto.journalEntryManipulate(existingJEntry));
 
             return Ok(existingJEntry.AsDto());
         }

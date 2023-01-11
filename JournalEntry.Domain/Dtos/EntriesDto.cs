@@ -19,7 +19,7 @@ namespace JournalEntry.Domain.Dtos
             List<Entry> journalEntries = new List<Entry>();
 
             foreach (var item in entries)
-                journalEntries.Add(item.CreateJournalEntry());
+                journalEntries.Add(item.journalEntryManipulate());
 
             return journalEntries;
         }

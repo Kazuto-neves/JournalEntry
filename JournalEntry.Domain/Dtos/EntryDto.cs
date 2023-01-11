@@ -40,7 +40,9 @@ namespace JournalEntry.Domain.Dtos
             return validationResults.IsValid;
         }
 
-        public Entry CreateJournalEntry()
+        public Entry journalEntryManipulate(Entry? entry = null) => (entry is null ? CreateJournalEntry() : UpdateJournalEntry(entry));
+
+        internal Entry CreateJournalEntry()
         {
             return new Entry()
             {
@@ -53,7 +55,7 @@ namespace JournalEntry.Domain.Dtos
             };
         }
 
-        public Entry UpdateJournalEntry(Entry entry)
+        internal Entry UpdateJournalEntry(Entry entry)
         {
             Id = entry.Id;
             EffectiveDate = entry.EffectiveDate;
