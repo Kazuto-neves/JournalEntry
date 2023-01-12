@@ -31,7 +31,8 @@ namespace JournalEntry.Domain.Repository
             var _result = await _db.journalEntries.FindAsync(id);
 
             if (_result is null)
-                throw ReturnException.nullReferenceException($"Não existe este journal entry ID: {id}");
+                throw ReturnException.getException("nullReferenceException", $"Não existe este journal entry ID: {id}");
+            //throw ReturnException.nullReferenceException($"Não existe este journal entry ID: {id}");
 
             await Task.CompletedTask;
             return _result;
@@ -42,7 +43,8 @@ namespace JournalEntry.Domain.Repository
             var _result = await _db.journalEntries.FirstOrDefaultAsync(existingItem => existingItem.Id == jEntry.Id);
 
             if (_result is null)
-                throw ReturnException.nullReferenceException($"Não existe este journal entry ID: {jEntry.Id}");
+                throw ReturnException.getException("nullReferenceException", $"Não existe este journal entry ID: {jEntry.Id}");
+            //throw ReturnException.nullReferenceException($"Não existe este journal entry ID: {jEntry.Id}");
             else
             {
                 _result.EffectiveDate = jEntry.EffectiveDate;

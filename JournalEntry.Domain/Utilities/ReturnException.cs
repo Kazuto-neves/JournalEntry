@@ -4,6 +4,80 @@ namespace JournalEntry.Domain.Utilities
 {
     public static class ReturnException
     {
+        public static Exception getException(string type, string message)
+        {
+            return type.Equals("accessViolationException") ? accessViolationException(message) :
+                type.Equals("aggregateException") ? aggregateException(message) :
+                type.Equals("appDomainUnloadedException") ? appDomainUnloadedException(message) :
+                type.Equals("applicationException") ? applicationException(message) :
+                type.Equals("argumentNullException") ? argumentNullException(message) :
+                type.Equals("argumentOutOfRangeException") ? argumentOutOfRangeException(message) :
+                type.Equals("arithmeticException") ? arithmeticException(message) :
+                type.Equals("arrayTypeMismatchException") ? arrayTypeMismatchException(message) :
+                type.Equals("badImageFormatException") ? badImageFormatException(message) :
+                type.Equals("cannotUnloadAppDomainException") ? cannotUnloadAppDomainException(message) :
+                type.Equals("contextMarshalException") ? contextMarshalException(message) :
+                type.Equals("dataMisalignedException") ? dataMisalignedException(message) :
+                type.Equals("divideByZeroException") ? divideByZeroException(message) :
+                type.Equals("dllNotFoundException") ? dllNotFoundException(message) :
+                type.Equals("duplicateWaitObjectException") ? duplicateWaitObjectException(message) :
+                type.Equals("entryPointNotFoundException") ? entryPointNotFoundException(message) :
+                type.Equals("fieldAccessException") ? fieldAccessException(message) :
+                type.Equals("formatException") ? formatException(message) :
+                type.Equals("indexOutOfRangeException") ? indexOutOfRangeException(message) :
+                type.Equals("insufficientMemoryException") ? insufficientMemoryException(message) :
+                type.Equals("invalidCastException") ? invalidCastException(message) :
+                type.Equals("invalidOperationException") ? invalidOperationException(message) :
+                type.Equals("invalidProgramException") ? invalidProgramException(message) :
+                type.Equals("invalidTimeZoneException") ? invalidTimeZoneException(message) :
+                type.Equals("memberAccessException") ? memberAccessException(message) :
+                type.Equals("methodAccessException") ? methodAccessException(message) :
+                type.Equals("missingFieldException") ? missingFieldException(message) :
+                type.Equals("missingMemberException") ? missingMemberException(message) :
+                type.Equals("missingMethodException") ? missingMethodException(message) :
+                type.Equals("multicastNotSupportedException") ? multicastNotSupportedException(message) :
+                type.Equals("notFiniteNumberException") ? notFiniteNumberException(message) :
+                type.Equals("notImplementedException") ? notImplementedException(message) :
+                type.Equals("notSupportedException") ? notSupportedException(message) :
+                type.Equals("nullReferenceException") ? nullReferenceException(message) :
+                type.Equals("objectDisposedException") ? objectDisposedException(message) :
+                type.Equals("operationCanceledException") ? operationCanceledException(message) :
+                type.Equals("outOfMemoryException") ? outOfMemoryException(message) :
+                type.Equals("overflowException") ? overflowException(message) :
+                type.Equals("platformNotSupportedException") ? platformNotSupportedException(message) :
+                type.Equals("rankException") ? rankException(message) :
+                type.Equals("stackOverflowException") ? stackOverflowException(message) :
+                type.Equals("systemException") ? systemException(message) :
+                type.Equals("timeoutException") ? timeoutException(message) :
+                type.Equals("timeZoneNotFoundException") ? timeZoneNotFoundException(message) :
+                type.Equals("typeAccessException") ? typeAccessException(message) :
+                type.Equals("typeLoadException") ? typeLoadException(message) :
+                type.Equals("typeUnloadedException") ? typeUnloadedException(message) :
+                type.Equals("unauthorizedAccessException") ? unauthorizedAccessException(message) :
+                type.Equals("uriFormatException") ? uriFormatException(message) :
+                type.Equals("constraintException") ? constraintException(message) :
+                type.Equals("dataException") ? dataException(message) :
+                type.Equals("dbConcurrencyException") ? dbConcurrencyException(message) :
+                type.Equals("duplicateNameException") ? duplicateNameException(message) :
+                type.Equals("evaluateException") ? evaluateException(message) :
+                type.Equals("inRowChangingEventException") ? inRowChangingEventException(message) :
+                type.Equals("invalidConstraintException") ? invalidConstraintException(message) :
+                type.Equals("invalidExpressionException") ? invalidExpressionException(message) :
+                type.Equals("missingPrimaryKeyException") ? missingPrimaryKeyException(message) :
+                type.Equals("noNullAllowedException") ? noNullAllowedException(message) :
+                type.Equals("readOnlyException") ? readOnlyException(message) :
+                type.Equals("rowNotInTableException") ? rowNotInTableException(message) :
+                type.Equals("strongTypingException") ? strongTypingException(message) :
+                type.Equals("syntaxErrorException") ? syntaxErrorException(message) :
+                type.Equals("versionNotFoundException") ? versionNotFoundException(message) :
+                type.Equals("directoryNotFoundException") ? directoryNotFoundException(message) :
+                type.Equals("driveNotFoundException") ? driveNotFoundException(message) :
+                type.Equals("endOfStreamException") ? endOfStreamException(message) :
+                type.Equals("fileNotFoundException") ? fileNotFoundException(message) :
+                type.Equals("internalBufferOverflowException") ? internalBufferOverflowException(message) :
+                type.Equals("invalidDataException") ? invalidDataException(message) :
+                type.Equals("ioException") ? ioException(message) : pathTooLongException(message);
+        }
         public static Exception accessViolationException(string message) => new AccessViolationException(message);
         public static Exception aggregateException(string message) => new AggregateException(message);
         public static Exception appDomainUnloadedException(string message) => new AppDomainUnloadedException(message);
