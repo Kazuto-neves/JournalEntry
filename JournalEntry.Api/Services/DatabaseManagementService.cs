@@ -1,7 +1,6 @@
 ﻿using JournalEntry.Domain.Services;
 using JournalEntry.Domain.Utilities;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace JournalEntry.Api.Services
 {
